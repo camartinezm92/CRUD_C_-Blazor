@@ -1,0 +1,266 @@
+{
+	"info": {
+		"_postman_id": "0b215ca8-c629-453e-ab23-6965591a44d0",
+		"name": "CUDR C# y Blazor",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "23823502"
+	},
+	"item": [
+		{
+			"name": "Pruebas Postman",
+			"item": [
+				{
+					"name": "CRUDUsuarios",
+					"item": [
+						{
+							"name": "POST",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"NombreUsuario\": \"admi656544n1\",\r\n    \"NombreCompleto\": \"Admin U651s654er\",\r\n    \"Contrasena\": \"admin123\",\r\n    \"RolId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://localhost:7054/api/Usuarios"
+							},
+							"response": []
+						},
+						{
+							"name": "GET",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://localhost:7054/api/Usuarios"
+							},
+							"response": []
+						},
+						{
+							"name": "GETID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://localhost:7054/api/Usuarios/20"
+							},
+							"response": []
+						},
+						{
+							"name": "DELETEID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "https://localhost:7054/api/Usuarios/20"
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"NombreUsuario\": \"nuevonuevo\",\r\n    \"NombreCompleto\": \"Admin lvnd\",\r\n    \"RolId\": 1\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://localhost:7054/api/Usuarios/20"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CRUDProductos",
+					"item": [
+						{
+							"name": "POST",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"nombre\": \"prueba de creacion 2.0\",\r\n        \"descripcion\": \"en postman\",\r\n        \"precio\": 15000,\r\n        \"inventario\": 20,\r\n        \"imagen\": \"https://pcpro.es/wp-content/uploads/2018/01/mini-pc.jpg\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://localhost:7054/api/Productos"
+							},
+							"response": []
+						},
+						{
+							"name": "GET",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://localhost:7054/api/Productos"
+							},
+							"response": []
+						},
+						{
+							"name": "GETID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://localhost:7054/api/Productos/2"
+							},
+							"response": []
+						},
+						{
+							"name": "DELETEID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "https://localhost:7054/api/Productos/2"
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n        \"nombre\": \"prueba de creacion 2.0 y actualizacion\",\r\n        \"descripcion\": \"en postman\",\r\n        \"precio\": 15000,\r\n        \"inventario\": 20,\r\n        \"imagen\": \"https://pcpro.es/wp-content/uploads/2018/01/mini-pc.jpg\"\r\n    }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://localhost:7054/api/Productos/2"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "CRUDPedidos",
+					"item": [
+						{
+							"name": "POST",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"usuarioId\": 30,\r\n  \"productos\":[\r\n    {\r\n    \"productoId\": 11,\r\n  \"cantidad\": 2\r\n  },{\r\n  \"productoId\": 12,\r\n  \"cantidad\": 5\r\n  }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://localhost:7054/api/Pedidos"
+							},
+							"response": []
+						},
+						{
+							"name": "GET",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://localhost:7054/api/Pedidos"
+							},
+							"response": []
+						},
+						{
+							"name": "GETID",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "https://localhost:7054/api/Pedidos/4"
+							},
+							"response": []
+						},
+						{
+							"name": "DELETEID",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": "https://localhost:7054/api/Pedidos/4"
+							},
+							"response": []
+						},
+						{
+							"name": "UPDATE",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"usuarioId\": 28,\r\n  \"productos\":[\r\n    {\r\n    \"productoId\": 25,\r\n  \"cantidad\": 5\r\n  },{\r\n  \"productoId\": 15,\r\n  \"cantidad\": 5\r\n  }\r\n  ]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": "https://localhost:7054/api/Pedidos/32"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"usuario\": \"admin\",\r\n  \"contrasena\": \"admin123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "https://localhost:7054/api/Auth/login"
+					},
+					"response": []
+				}
+			],
+			"description": "Enndpoints Backen TiendaAPI\n\n!. Ingrese a el aprtado login y ejecute la consulta el token que recibe como repsuesta ingreselo en el partado de la carpta Pruebas Postman done dice autorization y gurdelo, ejecute libremente cualqeuir edmpoint, ya estan estruturados.",
+			"auth": {
+				"type": "bearer",
+				"bearer": {
+					"token": ""
+				}
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

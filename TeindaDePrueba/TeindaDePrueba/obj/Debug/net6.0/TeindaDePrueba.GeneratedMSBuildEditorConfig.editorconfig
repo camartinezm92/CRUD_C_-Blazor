@@ -38,6 +38,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/CM/source/repos/TeindaDePrueba/TeindaDePrueba/Pages/Pagos.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGFnb3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/CM/source/repos/TeindaDePrueba/TeindaDePrueba/Pages/Pedidos/CrearPedido.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUGVkaWRvc1xDcmVhclBlZGlkby5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
