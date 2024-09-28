@@ -114,11 +114,12 @@ El frontend está desarrollado en **Blazor** con la siguiente estructura:
        - `SPR_UPD_ACTUALIZAR_PEDIDO`
        - `SPR_DEL_ELIMINAR_PEDIDO`
 
-4. **Pruebas del sistema:**
+4. Ejecuta una consula SQL con la data de pruedas que se encuentra dentro de la carpeta SQL llamado datos.sql
+5. **Pruebas del sistema:**
    - Clona el repositorio del backend (`TiendaAPI`), ajusta el archivo `appsettings.json` con los datos de conexión a tu SQL Server y ejecuta el proyecto.
    - Para probar la API, usa **Swagger** o cualquier herramienta de API Testing. Valida la conexión a la base de datos y prueba los diferentes endpoints.
    
-5. **Login y Autorización:**
+6. **Login y Autorización:**
    - Para acceder a los endpoints protegidos, autentícate usando `/api/Auth/login` con las siguientes credenciales:
      - **Admin**: 
        - Usuario: `admin`
@@ -130,17 +131,19 @@ El frontend está desarrollado en **Blazor** con la siguiente estructura:
        - Usuario: `cliente`
        - Contraseña: `cliente`
 
+La estrutura de ejemplo de solicutud se encuentra e la carpeta estrutre con el nombre de la estrutura y peticion que realiza.
+
 ## Cómo Ejecutar el Proyecto
 
-1. **Clona el repositorio del backend:**  
+1. **Clona el repositorio  y abre el backend:**  
    ```bash
-   git clone <URL del repositorio backend>
+      TiendaAPI
    ```
 2. **Configura las cadenas de conexión en `appsettings.json` para tu servidor de SQL Server.**
 3. **Ejecuta el proyecto en Visual Studio o usando `dotnet run`.**
-4. **Clona el repositorio del frontend Blazor**  
+4. **Abre el frontend**  
    ```bash
-   git clone <URL del repositorio frontend>
+      TiendaDePrueba
    ```
 5. **Ejecuta el frontend después de tener el backend en funcionamiento.**
 
