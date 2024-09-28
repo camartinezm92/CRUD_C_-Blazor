@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "dfmx8phAAyfERVNPRKZdQGmvDM9AYrDMBZh7aLcsAfw=",
+  "Source": "TiendaWebAPI",
+  "BasePath": "_content/TiendaWebAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

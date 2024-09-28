@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35303.130
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TiendaWebAPI", "TiendaWebAPI\TiendaWebAPI.csproj", "{02BC01BA-C573-4C63-8583-5D383A6184B4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{02BC01BA-C573-4C63-8583-5D383A6184B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02BC01BA-C573-4C63-8583-5D383A6184B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02BC01BA-C573-4C63-8583-5D383A6184B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02BC01BA-C573-4C63-8583-5D383A6184B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C71D9D5A-19B9-456D-89E2-2E6CF77B545B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C71D9D5A-19B9-456D-89E2-2E6CF77B545B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C71D9D5A-19B9-456D-89E2-2E6CF77B545B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C71D9D5A-19B9-456D-89E2-2E6CF77B545B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38B60084-D634-4BD1-9753-1244220E4466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38B60084-D634-4BD1-9753-1244220E4466}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38B60084-D634-4BD1-9753-1244220E4466}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38B60084-D634-4BD1-9753-1244220E4466}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1198CCBB-A89B-49B3-8082-144EE60CC66A}
+	EndGlobalSection
+EndGlobal

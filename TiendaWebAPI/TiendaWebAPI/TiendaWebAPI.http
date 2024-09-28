@@ -1,0 +1,6 @@
+@TiendaWebAPI_HostAddress = http://localhost:5121
+
+GET {{TiendaWebAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
