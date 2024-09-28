@@ -1,0 +1,171 @@
+﻿@page "/crear-pedido"
+@inject ProductoCoordinator ProductoCoordinator
+@inject PedidoCoordinator PedidoCoordinator
+@inject NavigationManager NavigationManager
+@inject CustomAuthStateProvider AuthStateProvider
+
+<PageTitle>T.I.C</PageTitle>
+
+<div class="col-md-6">
+    <h1><strong>Crear Nuevo Pedido</strong> </h1>
+</div>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <p class="text-danger">@mensaje</p>
+}
+<button class="btn btn-secondary" @onclick="VolverAtras">Volver Atrás</button>
+<!-- Productos Disponibles -->
+@if (productos == null)
+{
+    <p>Cargando productos...</p>
+}
+else if (!productos.Any())
+{
+    <p>No hay productos disponibles para agregar al pedido.</p>
+}
+else
+{
+    <h4>Selecciona los productos</h4>
+    <div class="row">
+        @foreach (var producto in productos)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="@producto.ImagenUrl" class="card-img-top" alt="@producto.Nombre" style="width: 150px; height: 150px; object-fit: cover; margin: 10px auto;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@producto.Nombre</h5>
+                        <p class="card-text">Precio: @producto.Precio</p>
+                        <p class="card-text">Inventario disponible: @producto.Inventario</p>
+                        <input type="number" @bind="producto.CantidadSeleccionada" class="form-control" max="@producto.Inventario" placeholder="Cantidad" />
+                    </div>
+                    <div class="card-footer text-center">
+                        @if (producto.Inventario == 0)
+                        {
+                            <button class="btn btn-secondary w-100" disabled>Sin Stock</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary w-100" @onclick="() => AgregarProductoAlPedido(producto)">Agregar al Pedido</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+<!-- Productos Seleccionados -->
+@if (productosSeleccionados.Any())
+{
+    <h4>Productos seleccionados</h4>
+    <ul class="list-group mb-4">
+        @foreach (var producto in productosSeleccionados)
+        {
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <p class="mb-0"><strong>@producto.Nombre</strong></p>
+                    <p class="mb-0">Cantidad: @producto.CantidadSeleccionada</p>
+                    <p class="mb-0">Precio Total: @producto.CantidadSeleccionada * producto.Precio</p>
+                </div>
+                <button class="btn btn-danger" @onclick="() => EliminarProductoDelPedido(producto)">Eliminar</button>
+            </li>
+        }
+    </ul>
+
+    <div class="d-flex justify-content-between">
+        <button class="btn btn-success" @onclick="CrearNuevoPedido">Finalizar Pedido</button>
+        <!-- Botón para volver atrás -->
+        <button class="btn btn-secondary" @onclick="VolverAtras">Volver Atrás</button>
+    </div>
+}
+
+@code {
+    private List<ProductoDTO> productos = new List<ProductoDTO>(); // Aseguramos que esté inicializada
+    private List<ProductoDTO> productosSeleccionados = new List<ProductoDTO>();
+    private ModelPedido nuevoPedido = new ModelPedido();
+    private string mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            productos = await ProductoCoordinator.ObtenerProductosCoordinadosAsync();
+            nuevoPedido.UsuarioId = await AuthStateProvider.GetUsuarioIdAsync();
+            if (nuevoPedido.UsuarioId == null)
+            {
+                NavigationManager.NavigateTo("/", true);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar los productos: {ex.Message}";
+        }
+    }
+
+    // Agregar producto al pedido
+    private void AgregarProductoAlPedido(ProductoDTO producto)
+    {
+        if (producto.CantidadSeleccionada > 0 && producto.CantidadSeleccionada <= producto.Inventario)
+        {
+            var productoExistente = productosSeleccionados.FirstOrDefault(p => p.Id == producto.Id);
+
+            if (productoExistente != null)
+            {
+                productoExistente.CantidadSeleccionada = producto.CantidadSeleccionada;
+            }
+            else
+            {
+                productosSeleccionados.Add(producto);
+                nuevoPedido.Productos.Add(new ProductoPedidoModel
+                    {
+                        ProductoId = producto.Id,
+                        Cantidad = producto.CantidadSeleccionada
+                    });
+            }
+            mensaje = string.Empty;
+        }
+        else
+        {
+            mensaje = "Por favor selecciona una cantidad válida.";
+        }
+    }
+
+    // Eliminar producto del pedido
+    private void EliminarProductoDelPedido(ProductoDTO producto)
+    {
+        productosSeleccionados.Remove(producto);
+        var productoEnPedido = nuevoPedido.Productos.FirstOrDefault(p => p.ProductoId == producto.Id);
+        if (productoEnPedido != null)
+        {
+            nuevoPedido.Productos.Remove(productoEnPedido);
+        }
+    }
+
+    // Crear nuevo pedido
+    private async Task CrearNuevoPedido()
+    {
+        if (!productosSeleccionados.Any())
+        {
+            mensaje = "Debe seleccionar al menos un producto para crear el pedido.";
+            return;
+        }
+
+        var exito = await PedidoCoordinator.CrearPedidoCoordinadoAsync(nuevoPedido);
+
+        if (exito)
+        {
+            mensaje = "Pedido creado correctamente.";
+            NavigationManager.NavigateTo("/listar-pedidos");
+        }
+        else
+        {
+            mensaje = "Error al crear el pedido.";
+        }
+    }
+
+    private void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/listar-pedidos");
+    }
+}

@@ -1,0 +1,69 @@
+﻿@page "/crear-producto"
+@inject ProductoCoordinator ProductoCoordinator
+@inject NavigationManager NavigationManager
+
+<h3 class="mb-4 text-center" style="font-size: 2rem; font-weight: bold; color: #343a40;">Crear Nuevo Producto</h3>
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <p class="text-center text-danger">@mensaje</p>
+}
+
+<div class="card mx-auto" style="max-width: 600px; padding: 20px;">
+    <div class="card-body">
+        <div class="form-group mb-3">
+            <label>Nombre del Producto:</label>
+            <input @bind="productoNuevo.Nombre" class="form-control" placeholder="Ingrese el nombre del producto" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Descripción:</label>
+            <textarea @bind="productoNuevo.Descripcion" class="form-control" placeholder="Ingrese una descripción" rows="3"></textarea>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Precio:</label>
+            <input type="number" @bind="productoNuevo.Precio" class="form-control" placeholder="Ingrese el precio" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Inventario:</label>
+            <input type="number" @bind="productoNuevo.Inventario" class="form-control" placeholder="Ingrese la cantidad en inventario" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label>URL de Imagen:</label>
+            <input @bind="productoNuevo.ImagenUrl" class="form-control" placeholder="Ingrese la URL de la imagen" />
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary w-50 me-2" @onclick="CrearNuevoProducto">Crear Producto</button>
+            <button class="btn btn-secondary w-50" @onclick="VolverAtras">Volver Atrás</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ModelProducto productoNuevo = new ModelProducto();
+    private string mensaje = string.Empty;
+
+    private async Task CrearNuevoProducto()
+    {
+        var exito = await ProductoCoordinator.CrearProductoCoordinadoAsync(productoNuevo);
+
+        if (exito)
+        {
+            mensaje = "Producto creado correctamente.";
+            NavigationManager.NavigateTo("/listar-productos");
+        }
+        else
+        {
+            mensaje = "Error al crear el producto.";
+        }
+    }
+
+    private void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/listar-productos");
+    }
+}

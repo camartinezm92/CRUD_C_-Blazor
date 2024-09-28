@@ -1,0 +1,115 @@
+﻿@inject TeindaDePrueba.State.AppState AppState
+@inject NavigationManager NavigationManager
+@inject CustomAuthStateProvider AuthStateProvider
+
+<div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">
+            <img src="/img/carritocompra2.png" alt="Logo" class="nav-img" />
+            T.I.Comercio
+        </a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+
+        @if (UserHasAccess("Usuarios"))
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/listar-usuarios">
+                    <span class="oi oi-person" aria-hidden="true"></span> Usuarios
+                </NavLink>
+            </div>
+        }
+        @if (UserHasAccess("Productos"))
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/listar-productos">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Productos
+                </NavLink>
+            </div>
+        }
+        @if (UserHasAccess("Pedidos"))
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link" href="/listar-pedidos">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span> Pedidos
+                </NavLink>
+            </div>
+        }
+
+        @if (UserHasAccess("MiUsuario"))
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link btn btn-danger" @onclick="CerrarSesion">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
+                </NavLink>
+            </div>
+        }
+        else
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link btn btn-primary" href="login">
+                    <span class="oi oi-account-login" aria-hidden="true"></span> Login
+                </NavLink>
+            </div>
+
+            <div class="nav-item px-3">
+                <NavLink class="nav-link btn btn-primary" href="crear-usuario">
+                    <span class="oi oi-person" aria-hidden="true"></span> Crear Usuario
+                </NavLink>
+            </div>
+        }
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string userRole = string.Empty;
+    private int usuarioId;
+
+   
+
+    protected override void OnInitialized()
+    {
+        // Suscribirse a los cambios del estado
+        AppState.OnChange += StateHasChanged;
+        userRole = AppState.Rol;
+        usuarioId = AppState.UsuarioId;
+
+    }
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+
+    private bool UserHasAccess(string section)
+    {
+        return section switch
+        {
+            "Usuarios" => AppState.Rol == "Admin",
+            "Productos" => AppState.Rol == "Admin" || AppState.Rol == "Cliente" || AppState.Rol == "Empleado",
+            "Pedidos" => AppState.Rol == "Admin" || AppState.Rol == "Cliente" || AppState.Rol == "Empleado",
+            "MiUsuario" => AppState.Rol == "Admin" || AppState.Rol == "Cliente" || AppState.Rol == "Empleado",
+            _ => false
+        };
+    }
+
+    private async Task CerrarSesion()
+    {
+        await AuthStateProvider.LogoutAsync();
+        NavigationManager.NavigateTo("/login");
+    }
+}

@@ -1,0 +1,93 @@
+﻿@page "/crear-usuario"
+@inject UsuarioCoordinator UsuarioCoordinator
+@inject NavigationManager NavigationManager
+@inject CustomAuthStateProvider AuthStateProvider
+
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+    <div class="card shadow p-4" style="width: 25rem;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Crear Nuevo Usuario</h3>
+
+            @if (!string.IsNullOrEmpty(mensaje))
+            {
+                <p class="text-danger">@mensaje</p>
+            }
+
+            <EditForm Model="@usuarioNuevo" OnValidSubmit="CrearNuevoUsuario">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group mb-3">
+                    <label for="usuario">Nombre de Usuario:</label>
+                    <InputText id="usuario" @bind-Value="usuarioNuevo.UsU_CUSUARIO" class="form-control" placeholder="Ingrese su nombre de usuario" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="nombreCompleto">Nombre Completo:</label>
+                    <InputText id="nombreCompleto" @bind-Value="usuarioNuevo.UsU_CNOMBRE_COMPLETO" class="form-control" placeholder="Ingrese su nombre completo" />
+                </div>
+
+                <div class="form-group mb-3">
+                    <label for="contraseña">Contraseña:</label>
+                    <InputText id="contraseña" @bind-Value="usuarioNuevo.UsU_CCONTRASENA" type="password" class="form-control" placeholder="Ingrese su contraseña" />
+                </div>
+
+                @if (userRole == "Admin")
+                {
+                    <div class="form-group mb-3">
+                        <label for="rol">Rol:</label>
+                        <select id="rol" @bind="usuarioNuevo.UsU_NROL_ID" class="form-control">
+                            <option value="1">Admin</option>
+                            <option value="2">Empleado</option>
+                            <option value="3">Cliente</option>
+                        </select>
+                    </div>
+                }
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Crear Usuario</button>
+                    <button type="button" class="btn btn-secondary" @onclick="VolverAtras">Volver Atrás</button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ModelUsuario usuarioNuevo = new ModelUsuario();
+    private string mensaje = string.Empty;
+    private string userRole = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el rol del usuario autenticado
+        userRole = await AuthStateProvider.GetRolAsync();
+
+        // Si no es Admin, asignar rol "Cliente" por defecto
+        if (userRole != "Admin")
+        {
+            usuarioNuevo.UsU_NROL_ID = 3; // Asigna el rol "Cliente" por defecto
+        }
+    }
+
+    // Método para crear un nuevo usuario
+    private async Task CrearNuevoUsuario()
+    {
+        var exito = await UsuarioCoordinator.CrearUsuarioCoordinadoAsync(usuarioNuevo);
+
+        if (exito)
+        {
+            mensaje = "Usuario creado correctamente.";
+            NavigationManager.NavigateTo("/login"); // Redirigir al login después de crear un usuario
+        }
+        else
+        {
+            mensaje = "Error al crear el usuario.";
+        }
+    }
+
+    private void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/listar-usuarios");
+    }
+}

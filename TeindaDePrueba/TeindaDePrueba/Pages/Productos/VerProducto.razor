@@ -1,0 +1,185 @@
+﻿@page "/ver-producto/{id:int}"
+@inject ProductoCoordinator ProductoCoordinator
+@inject NavigationManager NavigationManager
+@inject TeindaDePrueba.State.AppState AppState
+
+<PageTitle>T.I.C</PageTitle>
+
+<div class="col-md-6">
+    <h1><strong>Detalles del Producto</strong> </h1>
+</div>
+
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <p class="text-center text-danger">@mensaje</p>
+}
+
+@if (producto != null)
+{
+    <div class="card mx-auto" style="max-width: 600px; padding: 20px;">
+        <div class="card-body">
+            <div class="mb-3">
+                <h5 class="card-title"><strong>Nombre del Producto:</strong> @producto.Nombre</h5>
+            </div>
+
+            <div class="mb-3">
+                <p class="card-text"><strong>Descripción:</strong> @producto.Descripcion</p>
+            </div>
+
+            <div class="mb-3">
+                <p class="card-text"><strong>Precio:</strong> @producto.Precio.ToString("C")</p>
+            </div>
+
+            <div class="mb-3">
+                <p class="card-text"><strong>Inventario:</strong> @producto.Inventario</p>
+            </div>
+
+            <div class="mb-3">
+                <p class="card-text"><strong>Imagen:</strong></p>
+                <img src="@producto.ImagenUrl" alt="Imagen del producto" class="img-fluid" style="width: 150px; height: 150px; object-fit: cover;" />
+            </div>
+
+            <div class="d-flex justify-content-between">
+                @if (AppState.Rol == "Admin" || AppState.Rol == "Empleado")
+                {
+                    <button class="btn btn-primary w-100 me-2" @onclick="HabilitarEdicion">Editar Producto</button>
+                    <button class="btn btn-danger w-100 ms-2" @onclick="EliminarProducto">Eliminar Producto</button>
+                }
+                <button class="btn btn-secondary w-100 ms-2" @onclick="VolverAtras">Volver Atrás</button>
+            </div>
+        </div>
+
+        @if (modoEdicion)
+        {
+            <div class="card-footer">
+                <div>
+                    <label>Nombre del Producto:</label>
+                    <input @bind="productoActualizado.Nombre" class="form-control mb-2" />
+
+                    <label>Descripción:</label>
+                    <input @bind="productoActualizado.Descripcion" class="form-control mb-2" />
+
+                    <label>Precio:</label>
+                    <input type="number" @bind="productoActualizado.Precio" class="form-control mb-2" />
+
+                    <label>Inventario:</label>
+                    <input type="number" @bind="productoActualizado.Inventario" class="form-control mb-2" />
+
+                    <label>Imagen URL:</label>
+                    <input @bind="productoActualizado.ImagenUrl" class="form-control mb-2" />
+
+                    <div class="d-flex justify-content-between mt-3">
+                        <button class="btn btn-success w-100 me-2" @onclick="GuardarCambios">Guardar Cambios</button>
+                        <button class="btn btn-secondary w-100 ms-2" @onclick="CancelarEdicion">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-center text-warning">No se encontró el producto o está cargando...</p>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    private ProductoDTO? producto;
+    private ProductoActualizarModel productoActualizado = new ProductoActualizarModel();
+    private string mensaje = string.Empty;
+    private bool modoEdicion = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerDetallesProducto();
+    }
+
+    private async Task ObtenerDetallesProducto()
+    {
+        try
+        {
+            mensaje = "Cargando detalles...";
+            producto = await ProductoCoordinator.ObtenerProductoPorIdAsync(id);
+
+            if (producto != null)
+            {
+                productoActualizado.Nombre = producto.Nombre;
+                productoActualizado.Descripcion = producto.Descripcion;
+                productoActualizado.Precio = producto.Precio;
+                productoActualizado.Inventario = producto.Inventario;
+                productoActualizado.ImagenUrl = producto.ImagenUrl;
+                mensaje = string.Empty;
+            }
+            else
+            {
+                mensaje = "No se encontró el producto.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al obtener los detalles del producto: {ex.Message}";
+            NavigationManager.NavigateTo("/", true);
+        }
+    }
+
+    private void HabilitarEdicion()
+    {
+        modoEdicion = true;
+    }
+
+    private void CancelarEdicion()
+    {
+        modoEdicion = false;
+        mensaje = string.Empty;
+    }
+
+    private void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/listar-productos");
+    }
+
+    private async Task GuardarCambios()
+    {
+        try
+        {
+            var exito = await ProductoCoordinator.ActualizarProductoCoordinadoAsync(id, productoActualizado);
+
+            if (exito)
+            {
+                mensaje = "Producto actualizado correctamente.";
+                modoEdicion = false; // Volver al modo de visualización
+                await ObtenerDetallesProducto(); // Recargar detalles del producto actualizado
+            }
+            else
+            {
+                mensaje = "Error al actualizar el producto.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al actualizar el producto: {ex.Message}";
+        }
+    }
+
+    private async Task EliminarProducto()
+    {
+        try
+        {
+            var exito = await ProductoCoordinator.EliminarProductoCoordinadoAsync(id);
+            if (exito)
+            {
+                mensaje = "Producto eliminado correctamente.";
+                NavigationManager.NavigateTo("/listar-productos");
+            }
+            else
+            {
+                mensaje = "Error al eliminar el producto.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el producto: {ex.Message}";
+        }
+    }
+}

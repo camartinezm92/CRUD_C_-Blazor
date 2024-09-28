@@ -1,0 +1,8 @@
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.AssemblyInfoInputs.cache
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.AssemblyInfo.cs
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.csproj.CoreCompileInputs.cache
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.RazorAssemblyInfo.cache
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.RazorAssemblyInfo.cs
+C:\Users\CM\source\repos\TeindaDePrueba\TeindaDePrueba\obj\Debug\net6.0\TiendaDePrueba.sourcelink.json

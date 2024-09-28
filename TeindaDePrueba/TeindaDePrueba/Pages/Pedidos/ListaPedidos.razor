@@ -1,0 +1,180 @@
+﻿@page "/listar-pedidos"
+@inject PedidoCoordinator PedidoCoordinator
+@inject CustomAuthStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
+
+<div class="container">
+    <h3 class="text-center mb-4">Lista de Pedidos</h3>
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <p class="text-center text-danger">@mensaje</p>
+    }
+
+    @if (esAdmin || esEmpleado)
+    {
+        <div class="row mb-4 justify-content-center">
+            <!-- Sección de Búsqueda por ID de Usuario -->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="usuarioIdBuscar">Buscar por ID de Usuario:</label>
+                    <input id="usuarioIdBuscar" @bind="usuarioIdBuscar" class="form-control" placeholder="ID del Usuario" />
+                </div>
+                <button class="btn btn-info mt-2 w-100" @onclick="BuscarPedidosPorUsuarioId">Buscar por ID de Usuario</button>
+            </div>
+
+            <!-- Sección de Búsqueda por ID de Pedido -->
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="pedidoIdBuscar">Buscar por ID de Pedido:</label>
+                    <input id="pedidoIdBuscar" @bind="pedidoIdBuscar" class="form-control" placeholder="ID del Pedido" />
+                </div>
+                <button class="btn btn-info mt-2 w-100" @onclick="BuscarPedidoPorId">Buscar por ID de Pedido</button>
+            </div>
+        </div>
+
+        <div class="text-center mb-4">
+            <button @onclick="ListarPedidos" class="btn btn-primary me-2">Listar Pedidos</button>
+            <button class="btn btn-success" @onclick="CrearNuevoPedido">Crear Pedido</button>
+        </div>
+    }
+    else
+    {
+        <div class="text-center mb-4">
+            <button class="btn btn-info me-2" @onclick="BuscarMisPedidos">Buscar Mis Pedidos</button>
+            <button class="btn btn-success" @onclick="CrearNuevoPedido">Crear Pedido</button>
+        </div>
+    }
+
+    @if (pedidos != null && pedidos.Any())
+    {
+        <h4 class="mt-4 text-center">Resultados de la búsqueda</h4>
+        <div class="row justify-content-center">
+            @foreach (var pedido in pedidos)
+            {
+                <div class="col-md-6 mb-3">
+                    <div class="card p-3 shadow-sm">
+                        <h5 class="card-title text-center">Pedido ID: @pedido.Id</h5>
+                        <div class="card-body">
+                            <p><strong>Nombre del Usuario:</strong> @pedido.UsuarioNombre</p>
+                            <p><strong>Total:</strong> @pedido.ValorTotal.ToString("C")</p>
+                            <p><strong>Cantidad Total:</strong> @pedido.CantidadTotal</p>
+                            <p><strong>Fecha:</strong> @pedido.FechaPedido.ToString("dd/MM/yyyy")</p>
+                            <div class="text-center">
+                                <button class="btn btn-primary" @onclick="() => VerDetallesPedido(pedido.Id)">Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(mensaje))
+    {
+        <p class="text-center">@mensaje</p>
+    }
+</div>
+
+@code {
+    private List<PedidoDTO> pedidos;
+    private string mensaje = string.Empty;
+    private bool esAdmin = false;
+    private bool esEmpleado = false;
+    private int usuarioIdBuscar;
+    private int pedidoIdBuscar;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Obtener el rol del usuario logueado
+        var rol = await AuthStateProvider.GetRolAsync();
+        if (rol == null) { NavigationManager.NavigateTo("/", true); }
+        esAdmin = rol == "Admin";
+        esEmpleado = rol == "Empleado";
+    }
+
+    private async Task ListarPedidos()
+    {
+        mensaje = "Solicitando...";
+        pedidos = await PedidoCoordinator.ObtenerPedidosCoordinadosAsync();
+
+        if (pedidos == null || pedidos.Count == 0)
+        {
+            mensaje = "No se encontraron pedidos o ocurrió un error.";
+        }
+        else
+        {
+            mensaje = string.Empty; // Limpiar mensaje si la solicitud fue exitosa
+        }
+    }
+
+    private async Task BuscarPedidosPorUsuarioId()
+    {
+        try
+        {
+            mensaje = "Buscando pedidos por ID de Usuario...";
+            pedidos = await PedidoCoordinator.ObtenerPedidosPorUsuarioIdCoordinadoAsync(usuarioIdBuscar);
+            if (pedidos == null || !pedidos.Any())
+            {
+                mensaje = $"No se encontraron pedidos para el usuario con ID {usuarioIdBuscar}.";
+            }
+            mensaje = String.Empty;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al buscar pedidos: {ex.Message}";
+            NavigationManager.NavigateTo("/login", true);
+        }
+    }
+
+    private async Task BuscarPedidoPorId()
+    {
+        try
+        {
+            mensaje = "Buscando pedido...";
+            var pedido = await PedidoCoordinator.ObtenerPedidoIdCoordinadoAsync(pedidoIdBuscar);
+            if (pedido == null)
+            {
+                mensaje = $"No se encontró el pedido con ID {pedidoIdBuscar}.";
+            }
+            else
+            {
+                mensaje = string.Empty;
+                pedidos = new List<PedidoDTO> { pedido };
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al buscar pedido: {ex.Message}";
+        }
+    }
+
+    private async Task BuscarMisPedidos()
+    {
+        try
+        {
+            var usuarioId = await AuthStateProvider.GetUsuarioIdAsync();
+            mensaje = "Buscando tus pedidos...";
+            pedidos = await PedidoCoordinator.ObtenerPedidosPorUsuarioIdCoordinadoAsync(usuarioId);
+            if (pedidos == null || !pedidos.Any())
+            {
+                mensaje = "No se encontraron tus pedidos.";
+            }
+            mensaje = String.Empty;
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al buscar tus pedidos: {ex.Message}";
+        }
+    }
+
+    private void VerDetallesPedido(int pedidoId)
+    {
+        NavigationManager.NavigateTo($"/ver-pedido/{pedidoId}");
+    }
+
+    private void CrearNuevoPedido()
+    {
+        NavigationManager.NavigateTo("/crear-pedido");
+    }
+}

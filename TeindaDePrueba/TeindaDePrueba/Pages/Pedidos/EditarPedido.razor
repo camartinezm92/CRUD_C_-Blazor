@@ -1,0 +1,213 @@
+﻿@page "/editar-pedido/{id:int}"
+@inject ProductoCoordinator ProductoCoordinator
+@inject PedidoCoordinator PedidoCoordinator
+@inject NavigationManager NavigationManager
+
+@if (!string.IsNullOrEmpty(mensaje))
+{
+    <p class="text-danger">@mensaje</p>
+}
+
+@if (pedido != null)
+{
+    <!-- Factura en la parte superior -->
+    <div class="card p-4 shadow-lg mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="mb-0">Detalles del Pedido</h3>
+                <p><strong>ID del Pedido:</strong> @pedido.Id</p>
+                <p><strong>Nombre del Usuario:</strong> @pedido.UsuarioNombre</p>
+                <p><strong>Cantidad Total:</strong> @pedido.CantidadTotal</p>
+                <p><strong>Valor Total:</strong> @pedido.ValorTotal.ToString("C")</p>
+                <p><strong>Fecha del Pedido:</strong> @pedido.FechaPedido.ToString("dd/MM/yyyy")</p>
+            </div>
+            <div>
+                <img src="/img/carritocompra2.png" alt="Logo" style="width: 100px;" />
+            </div>
+        </div>
+
+        <!-- Listado de productos en el pedido -->
+        <h4>Productos en el Pedido</h4>
+        <ul class="list-group mb-4">
+            @foreach (var producto in pedido.Productos)
+            {
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <p class="mb-0"><strong>@producto.NombreProducto</strong></p>
+                        <p class="mb-0">Cantidad: @producto.Cantidad</p>
+                        <p class="mb-0">Precio Total: @producto.PrecioTotal.ToString("C")</p>
+                    </div>
+                    <button class="btn btn-danger" @onclick="() => EliminarProductoDelPedido(producto)">Eliminar</button>
+                </li>
+            }
+        </ul>
+
+        <div class="d-flex justify-content-between">
+            <button class="btn btn-primary" @onclick="FinalizarEdicionPedido">Finalizar Pedido</button>
+            <button class="btn btn-secondary" @onclick="VolverAtras">Volver Atrás</button>
+        </div>
+    </div>
+
+    <!-- Cards para agregar nuevos productos -->
+    <div class="row">
+        <h4>Agregar Nuevos Productos</h4>
+        @foreach (var producto in productosDisponibles)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <img src="@producto.ImagenUrl" class="card-img-top" alt="@producto.Nombre" style="width: 150px; height: 150px; object-fit: cover; margin: 10px auto;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@producto.Nombre</h5>
+                        <p class="card-text">Precio: @producto.Precio.ToString("C")</p>
+                        <p class="card-text">Inventario disponible: @producto.Inventario</p>
+                        <input type="number" @bind="producto.CantidadSeleccionada" class="form-control" min="0" max="@producto.Inventario" placeholder="Cantidad" />
+                    </div>
+                    <div class="card-footer text-center">
+                        @if (producto.Inventario == 0)
+                        {
+                            <button class="btn btn-secondary w-100" disabled>Sin Stock</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-primary w-100" @onclick="() => AgregarProductoAlPedido(producto)">Agregar al Pedido</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p class="text-danger">@mensaje</p>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    private PedidoDTO pedido = new PedidoDTO();
+    private List<ProductoDTO> productosDisponibles = new List<ProductoDTO>();
+    private string mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarPedido();
+        await CargarProductosDisponibles();
+    }
+
+    // Cargar el pedido por su ID
+    private async Task CargarPedido()
+    {
+        try
+        {
+            mensaje = "Cargando detalles del pedido...";
+            pedido = await PedidoCoordinator.ObtenerPedidoIdCoordinadoAsync(id);
+            if (pedido == null)
+            {
+                mensaje = "No se encontró el pedido.";
+            }
+            else
+            {
+                // Asegúrate de que el usuarioId está presente y no es cero
+                if (pedido.UsuarioId <= 0)
+                {
+                    mensaje = "El pedido no tiene un UsuarioId válido.";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar el pedido: {ex.Message}";
+            NavigationManager.NavigateTo("/", true);
+        }
+    }
+
+    // Cargar productos disponibles
+    private async Task CargarProductosDisponibles()
+    {
+        try
+        {
+            productosDisponibles = await ProductoCoordinator.ObtenerProductosCoordinadosAsync();
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al cargar productos disponibles: {ex.Message}";
+        }
+    }
+
+    // Agregar un producto al pedido, con validación de inventario
+    private void AgregarProductoAlPedido(ProductoDTO producto)
+    {
+        if (producto.CantidadSeleccionada > 0 && producto.CantidadSeleccionada <= producto.Inventario)
+        {
+            var productoExistente = pedido.Productos.FirstOrDefault(p => p.ProductoId == producto.Id);
+            if (productoExistente != null)
+            {
+                // Si el producto ya existe en el pedido, solo actualiza la cantidad
+                productoExistente.Cantidad += producto.CantidadSeleccionada;
+            }
+            else
+            {
+                // Si no existe, lo agregamos al pedido
+                pedido.Productos.Add(new ProductoPedidoDTO
+                    {
+                        ProductoId = producto.Id,
+                        NombreProducto = producto.Nombre,
+                        Cantidad = producto.CantidadSeleccionada,
+                        PrecioUnitario = producto.Precio,
+                        PrecioTotal = producto.CantidadSeleccionada * producto.Precio
+                    });
+            }
+
+            // Limpiar el campo de cantidad seleccionada
+            producto.CantidadSeleccionada = 0;
+            mensaje = string.Empty;  // Limpiar mensaje en caso de éxito
+        }
+        else
+        {
+            mensaje = "Por favor selecciona una cantidad válida o verifica el inventario.";
+        }
+    }
+
+    // Eliminar un producto del pedido
+    private void EliminarProductoDelPedido(ProductoPedidoDTO producto)
+    {
+        pedido.Productos.Remove(producto);
+    }
+
+    // Finalizar la edición del pedido
+    private async Task FinalizarEdicionPedido()
+    {
+        var pedidoActualizado = new ModelPedido
+            {
+                UsuarioId = pedido.UsuarioId, // El ID del usuario no se cambia
+                Productos = pedido.Productos.Select(p => new ProductoPedidoModel
+                {
+                    ProductoId = p.ProductoId,
+                    Cantidad = p.Cantidad
+                }).ToList()
+            };
+
+        try
+        {
+            var exito = await PedidoCoordinator.ActualizarPedidoCoordinadoAsync(id, pedidoActualizado);
+            if (exito)
+            {
+                mensaje = "Pedido actualizado correctamente.";
+                NavigationManager.NavigateTo($"/ver-pedido/{id}");
+            }
+            else
+            {
+                mensaje = "Error al actualizar el pedido. Verifique los detalles e intente nuevamente.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error inesperado al actualizar el pedido: {ex.Message}";
+        }
+    }
+
+    private void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/listar-pedidos");
+    }
+}

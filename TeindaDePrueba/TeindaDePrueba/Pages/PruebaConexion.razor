@@ -1,0 +1,18 @@
+﻿@page "/probar-conexion"
+@inject PruebaService PruebaService
+
+<h3>Prueba de Conexión</h3>
+
+<button @onclick="ProbarConexion">Probar Conexión</button>
+
+<p>@Resultado</p>
+
+@code {
+    private string Resultado;
+
+    private async Task ProbarConexion()
+    {
+        Resultado = "Conectando...";
+        Resultado = await PruebaService.ProbarConexionAsync();
+    }
+}

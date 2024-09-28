@@ -1,0 +1,84 @@
+﻿@page "/listar-usuarios"
+@inject UsuarioCoordinator UsuarioCoordinator
+@inject NavigationManager NavigationManager
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <h1>Gestión de Usuarios</h1>
+        </div>
+        <div class="col-md-6 text-end">
+            <button class="btn btn-success btn-lg" @onclick="CrearUsuario">Crear Usuario</button>
+        </div>
+    </div>
+
+    @if (usuarios != null && usuarios.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover w-100">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre Completo</th>
+                        <th>Rol</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var usuario in usuarios)
+                    {
+                        <tr>
+                            <td>@usuario.UsU_NID</td>
+                            <td>@usuario.UsU_CNOMBRE_COMPLETO</td>
+                            <td>@usuario.RolNombre</td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" @onclick="() => VerDetalles(usuario.UsU_NID)">Detalles</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(mensaje))
+    {
+        <p class="text-danger">@mensaje</p>
+    }
+</div>
+
+@code {
+    private List<UsuarioDTO> usuarios = null;
+    private string mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ListarUsuarios();
+    }
+
+    private async Task ListarUsuarios()
+    {
+        mensaje = "Solicitando...";
+        usuarios = null;
+
+        usuarios = await UsuarioCoordinator.ObtenerUsuariosCoordinadosAsync();
+
+        if (usuarios == null || usuarios.Count == 0)
+        {
+            mensaje = "Error al obtener la lista de usuarios o no hay usuarios disponibles.";
+        }
+        else
+        {
+            mensaje = string.Empty;
+        }
+    }
+
+    private void VerDetalles(int usuarioId)
+    {
+        NavigationManager.NavigateTo($"/ver-usuario/{usuarioId}");
+    }
+
+    private void CrearUsuario()
+    {
+        NavigationManager.NavigateTo("/crear-usuario");
+    }
+}

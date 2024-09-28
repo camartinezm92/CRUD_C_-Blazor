@@ -1,0 +1,197 @@
+﻿@page "/ver-usuario/{id:int}"
+@inject UsuarioCoordinator UsuarioCoordinator
+@inject IUsuarioService UsuarioService
+@inject NavigationManager NavigationManager
+@inject CustomAuthStateProvider AuthStateProvider
+@inject TeindaDePrueba.State.AppState AppState
+
+<PageTitle>T.I.C</PageTitle>
+
+<div class="col-md-6">
+    <h1><strong>Detalles del Usuario</strong> </h1>
+</div>
+
+<div class="main-content user-details-container">
+
+    @if (!string.IsNullOrEmpty(mensaje))
+    {
+        <p class="text-danger">@mensaje</p>
+    }
+
+    @if (usuario != null)
+    {
+        <div class="card user-details-card p-4 shadow">
+            @if (!modoEdicion)
+            {
+                <div class="user-info mb-3">
+                    <p><strong>Nombre de Usuario:</strong> @usuario?.UsU_CUSUARIO</p>
+                    <p><strong>Nombre Completo:</strong> @usuario?.UsU_CNOMBRE_COMPLETO</p>
+                    <p><strong>Rol:</strong> @usuario?.RolNombre</p>
+                    <p><strong>Fecha de Creación:</strong> @usuario?.UsU_DCREACION.ToString("dd/MM/yyyy")</p>
+                </div>
+                <div class="d-flex justify-content-start gap-2">
+                    <button class="btn btn-primary user-details-btn" @onclick="HabilitarEdicion">Editar Usuario</button>
+                    <button class="btn btn-danger user-details-btn" @onclick="EliminarUsuario">Eliminar Usuario</button>
+                    <button class="btn btn-secondary user-details-btn" @onclick="VolverAtras">Volver Atrás</button>
+                </div>
+            }
+            else
+            {
+                <div>
+                    @if (esAdmin)
+                    {
+                        <div class="form-group">
+                            <label>Nombre de Usuario:</label>
+                            <input @bind="usuarioNuevo.NombreUsuario" class="form-control" />
+                        </div>
+                    }
+                    else
+                    {
+                        <p><strong>Nombre de Usuario:</strong> @usuario?.UsU_CUSUARIO</p>
+                    }
+
+                    <div class="form-group">
+                        <label>Nombre Completo:</label>
+                        <input @bind="usuarioNuevo.NombreCompleto" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Contraseña (Opcional):</label>
+                        <input type="password" @bind="usuarioNuevo.Contrasena" class="form-control" placeholder="Dejar en blanco para no cambiarla" />
+                    </div>
+
+                    @if (esAdmin)
+                    {
+                        <div class="form-group">
+                            <label>Rol:</label>
+                            <select @bind="usuarioNuevo.RolId" class="form-control">
+                                <option value="1">Admin</option>
+                                <option value="2">Empleado</option>
+                                <option value="3">Cliente</option>
+                            </select>
+                        </div>
+                    }
+                    else
+                    {
+                        <p><strong>Rol:</strong> @usuario?.RolNombre</p>
+                    }
+
+                    <div class="d-flex justify-content-start gap-2 mt-3">
+                        <button class="btn btn-success user-details-btn" @onclick="GuardarCambios">Guardar Cambios</button>
+                        <button class="btn btn-secondary user-details-btn" @onclick="CancelarEdicion">Cancelar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    else
+    {
+        <p class="text-danger">@mensaje</p>
+    }
+</div>
+
+@code {
+    [Parameter] public int id { get; set; }
+    private UsuarioDTO usuario = new UsuarioDTO(); // Inicialización por defecto
+    private TeindaDePrueba.Models.UsuarioActualizarModel usuarioNuevo = new TeindaDePrueba.Models.UsuarioActualizarModel();
+    private string mensaje = string.Empty;
+    private bool modoEdicion = false;
+    private bool esAdmin = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerDetallesUsuario();
+        esAdmin = AppState.Rol == "Admin";
+    }
+
+    private async Task ObtenerDetallesUsuario()
+    {
+        try
+        {
+            mensaje = "Cargando detalles...";
+            usuario = await UsuarioCoordinator.ObtenerUsuarioPorIdAsync(id);
+
+            if (usuario != null)
+            {
+                usuarioNuevo.NombreUsuario = usuario.UsU_CUSUARIO;
+                usuarioNuevo.NombreCompleto = usuario.UsU_CNOMBRE_COMPLETO;
+                usuarioNuevo.RolId = usuario.UsU_NROL_ID;
+                mensaje = string.Empty;
+            }
+            else
+            {
+                mensaje = "No se encontró el usuario.";
+                NavigationManager.NavigateTo("/", true);
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al obtener los detalles del usuario: {ex.Message}";
+        }
+    }
+
+    private void HabilitarEdicion()
+    {
+        modoEdicion = true;
+    }
+
+    private void CancelarEdicion()
+    {
+        modoEdicion = false;
+        mensaje = string.Empty;
+    }
+
+    private void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/listar-usuarios");
+    }
+
+    private async Task GuardarCambios()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(usuarioNuevo.Contrasena))
+            {
+                usuarioNuevo.Contrasena = null; // No enviar contraseña si está vacía
+            }
+
+            var exito = await UsuarioCoordinator.ActualizarUsuarioCoordinadoAsync(id, usuarioNuevo);
+
+            if (exito)
+            {
+                mensaje = "Usuario actualizado correctamente.";
+                modoEdicion = false; // Volver al modo de visualización
+                await ObtenerDetallesUsuario(); // Recargar detalles del usuario
+            }
+            else
+            {
+                mensaje = "Error al actualizar el usuario.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al actualizar el usuario: {ex.Message}";
+        }
+    }
+
+    private async Task EliminarUsuario()
+    {
+        try
+        {
+            var exito = await UsuarioCoordinator.EliminarUsuarioCoordinadoAsync(id);
+            if (exito)
+            {
+                mensaje = "Usuario eliminado correctamente.";
+                NavigationManager.NavigateTo("/listar-usuarios");
+            }
+            else
+            {
+                mensaje = "Error al eliminar el usuario.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el usuario: {ex.Message}";
+        }
+    }
+}

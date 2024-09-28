@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\CM\\source\\repos\\TeindaDePrueba\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0E65F1C0-6845-4250-84DC-99F6380F76E8}|TeindaDePrueba\\TiendaDePrueba.csproj|c:\\users\\cm\\source\\repos\\teindadeprueba\\teindadeprueba\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{0E65F1C0-6845-4250-84DC-99F6380F76E8}|TeindaDePrueba\\TiendaDePrueba.csproj|solutionrelative:teindadeprueba\\_imports.razor||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "_Imports.razor",
+              "DocumentMoniker": "C:\\Users\\CM\\source\\repos\\TeindaDePrueba\\TeindaDePrueba\\_Imports.razor",
+              "RelativeDocumentMoniker": "TeindaDePrueba\\_Imports.razor",
+              "ToolTip": "C:\\Users\\CM\\source\\repos\\TeindaDePrueba\\TeindaDePrueba\\_Imports.razor",
+              "RelativeToolTip": "TeindaDePrueba\\_Imports.razor",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAABAAAAAbAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2024-09-24T03:29:08.184Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

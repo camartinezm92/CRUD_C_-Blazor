@@ -1,0 +1,76 @@
+﻿@page "/login"
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+
+<div class="d-flex justify-content-end align-items-center" style="height: 100vh;">
+    <div class="card shadow me-5" style="width: 22rem;">
+        <div class="card-body">
+            <h3 class="card-title text-center mb-4">Login</h3>
+
+            <EditForm Model="@loginModel" OnValidSubmit="OnLoginSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group mb-3">
+                    <label for="usuario">Usuario</label>
+                    <InputText id="usuario" @bind-Value="loginModel.Usuario" class="form-control" placeholder="Ingrese su usuario" />
+                </div>
+
+                <div class="form-group mb-4">
+                    <label for="contrasena">Contraseña</label>
+                    <InputText id="contrasena" @bind-Value="loginModel.Contrasena" type="password" class="form-control" placeholder="Ingrese su contraseña" />
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary">Conectar</button>
+                </div>
+            </EditForm>
+
+            <p class="text-danger text-center mt-2">@mensaje</p>
+
+            <div class="text-center mt-3">
+                <a href="/crear-usuario" class="btn btn-link">Crear Usuario</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new LoginModel();
+    private string mensaje;
+
+    private async Task OnLoginSubmit()
+    {
+        mensaje = "Conectando...";
+
+        // Crear un LoginRequest con los valores del LoginModel
+        var loginRequest = new LoginRequest
+            {
+                Usuario = loginModel.Usuario,
+                Contrasena = loginModel.Contrasena
+            };
+
+        // Pasar el LoginRequest al servicio AuthService
+        var result = await AuthService.Login(loginRequest);
+
+        if (result.Success)
+        {
+            mensaje = "Login exitoso!";
+            // Redirigir al usuario a la página principal después del login exitoso
+            Navigation.NavigateTo("/");
+
+            // Opcional: Notificar cambios de estado si es necesario
+            StateHasChanged();
+        }
+        else
+        {
+            mensaje = "Error: " + result.Message;
+        }
+    }
+
+    public class LoginModel
+    {
+        public string Usuario { get; set; }
+        public string Contrasena { get; set; }
+    }
+}

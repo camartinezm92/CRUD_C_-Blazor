@@ -1,0 +1,132 @@
+﻿@page "/ver-pedido/{id:int}"
+@inject PedidoCoordinator PedidoCoordinator
+@inject NavigationManager NavigationManager
+
+<PageTitle>T.I.C</PageTitle>
+
+
+
+@code {
+    [Parameter] public int id { get; set; }
+    private PedidoDTO pedido;
+    private string mensaje = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerDetallesPedido();
+    }
+
+    private async Task ObtenerDetallesPedido()
+    {
+        try
+        {
+            mensaje = "Cargando detalles...";
+            pedido = await PedidoCoordinator.ObtenerPedidoIdCoordinadoAsync(id);
+
+            if (pedido == null)
+            {
+                mensaje = "No se encontró el pedido.";
+            }
+            else
+            {
+                mensaje = string.Empty; // Limpiar mensaje en caso de éxito
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al obtener los detalles del pedido: {ex.Message}";
+            NavigationManager.NavigateTo("/", true);
+        }
+    }
+
+    private async Task EliminarPedido()
+    {
+        try
+        {
+            var exito = await PedidoCoordinator.EliminarPedidoCoordinadoAsync(id);
+            if (exito)
+            {
+                mensaje = "Pedido eliminado correctamente.";
+                NavigationManager.NavigateTo("/listar-pedidos");
+            }
+            else
+            {
+                mensaje = "Error al eliminar el pedido.";
+            }
+        }
+        catch (Exception ex)
+        {
+            mensaje = $"Error al eliminar el pedido: {ex.Message}";
+        }
+    }
+
+    private void IrAEditarPedido()
+    {
+        NavigationManager.NavigateTo($"/editar-pedido/{id}");
+    }
+
+    private void IrAPago()
+    {
+        NavigationManager.NavigateTo($"/pago/{id}"); // Ruta de pago
+    }
+
+    private void VolverAtras()
+    {
+        NavigationManager.NavigateTo("/listar-pedidos");
+    }
+}
+
+@if (pedido != null)
+{
+    <div class="card p-4 shadow-lg">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="mb-0">Detalles del Pedido</h3>
+                <p class="mb-0"><strong>ID del Pedido:</strong> @pedido.Id</p>
+                <p class="mb-0"><strong>Nombre del Usuario:</strong> @pedido.UsuarioNombre</p>
+                <p class="mb-0"><strong>Cantidad Total:</strong> @pedido.CantidadTotal</p>
+                <p class="mb-0"><strong>Valor Total:</strong> @pedido.ValorTotal.ToString("C")</p>
+                <p class="mb-0"><strong>Fecha del Pedido:</strong> @pedido.FechaPedido.ToString("dd/MM/yyyy")</p>
+            </div>
+            <div>
+                <img src="/img/carritocompra2.png" alt="Logo" style="width: 100px;" />
+            </div>
+        </div>
+
+        <h4>Productos del Pedido:</h4>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Precio Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var producto in pedido.Productos)
+                {
+                    <tr>
+                        <td>@producto.NombreProducto</td>
+                        <td>@producto.Cantidad</td>
+                        <td>@producto.PrecioUnitario.ToString("C")</td>
+                        <td>@producto.PrecioTotal.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between mt-4">
+            <button class="btn btn-danger" @onclick="EliminarPedido">Eliminar Pedido</button>
+            <button class="btn btn-primary" @onclick="IrAEditarPedido">Editar Pedido</button>
+            <div>
+                <button class="btn btn-secondary me-2" @onclick="VolverAtras">Volver Atrás</button>
+                <button class="btn btn-success" @onclick="IrAPago">Ir a Pago</button>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-danger">@mensaje</p>
+}
