@@ -82,17 +82,23 @@ El frontend está desarrollado en **Blazor** con la siguiente estructura:
 - **Coordinators:** Validación y estructuración de datos.
 - **Shared:** Componentes y layouts compartidos, como el navbar y botones reutilizables.
 
-### Configuración de Base de Datos
+
+# COmo instalar y ejecutar el proyecto  
 
 0. **Clona el repositorio**
 
+  ```bash
+      https://github.com/camartinezm92/CRUD_C_-Blazor.git
+   ```
+
+### Configuración de Base de Datos
 
 1. **Creación de las bases de datos**: 
    - Usa SQL Server y autentícate en la base de datos `master`.
-   - Ejecuta los scripts de las bases de datos proporcionados en los archivos `schemas_1DB.sql` y `schemas_2DB.sql`.
+   - Ejecuta los scripts de las bases de datos proporcionados en los archivos `DB1-usuarios` `DB2-Productosypedidos` y `creacion para encriptar y desencriprtar informacion de la tabla`.
    
 2. **Procedimientos almacenados (Usuarios):**
-   - Ejecuta cada uno de los siguientes procedimientos almacenados en la base de datos `PRUEBA_USUARIOS`:
+   - Ejecuta cada uno de los siguientes procedimientos almacenados de usuario  entrando a la carpeta Procemdienot alaqmacenados Usuarios dentor de la base de datos `PRUEBA_USUARIOS`:
      - `SPR_INS_CREAR_USUARIO`
      - `SPR_GET_LISTAR_USUARIOS`
      - `SPR_GET_OBTENER_USUARIO_POR_ID`
