@@ -1,4 +1,4 @@
-Aquí te dejo una versión mejorada y más organizada de tu README para GitHub:
+
 
 # CRUD en C# y Blazor
 
@@ -83,6 +83,9 @@ El frontend está desarrollado en **Blazor** con la siguiente estructura:
 - **Shared:** Componentes y layouts compartidos, como el navbar y botones reutilizables.
 
 ### Configuración de Base de Datos
+
+0. **Clona el repositorio**
+
 
 1. **Creación de las bases de datos**: 
    - Usa SQL Server y autentícate en la base de datos `master`.
