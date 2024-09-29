@@ -83,7 +83,7 @@ El frontend está desarrollado en **Blazor** con la siguiente estructura:
 - **Shared:** Componentes y layouts compartidos, como el navbar y botones reutilizables.
 
 
-# COmo instalar y ejecutar el proyecto  
+# Como instalar y ejecutar el proyecto  
 
 0. **Clona el repositorio**
 
