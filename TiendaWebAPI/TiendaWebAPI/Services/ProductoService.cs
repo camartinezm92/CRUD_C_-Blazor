@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using TiendaWebAPI.Models;
+﻿using TiendaWebAPI.Models;
 using TiendaWebAPI.Repositories;
 
 namespace TiendaWebAPI.Services

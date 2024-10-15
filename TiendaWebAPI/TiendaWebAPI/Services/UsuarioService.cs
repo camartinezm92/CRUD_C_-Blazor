@@ -1,7 +1,5 @@
 ﻿using TiendaWebAPI.Models;
 using TiendaWebAPI.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace TiendaWebAPI.Services
 {

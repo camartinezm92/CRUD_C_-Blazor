@@ -2,8 +2,6 @@
 using TiendaWebAPI.Data;
 using TiendaWebAPI.Models;
 using TiendaWebAPI.Repositories;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 public class UsuarioRepository : IUsuarioRepository
 {
@@ -98,7 +96,7 @@ public class UsuarioRepository : IUsuarioRepository
                 USU_NID = (int)reader["IdUsuario"],
                 USU_CUSUARIO = reader["NombreUsuario"].ToString(),
                 USU_CNOMBRE_COMPLETO = reader["NombreCompleto"].ToString(),
-                USU_BCONTRASENA_HASH = (byte[])reader["BContrasenaHash"],
+                USU_CPASSWORD = (byte[])reader["BContrasenaHash"],
                 USU_NROL_ID = (int)reader["RolId"],
                 RolNombre = reader["RolNombre"].ToString()
             },

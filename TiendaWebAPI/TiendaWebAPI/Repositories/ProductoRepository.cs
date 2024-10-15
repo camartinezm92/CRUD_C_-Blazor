@@ -1,6 +1,4 @@
 ﻿using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using TiendaWebAPI.Data;
 using TiendaWebAPI.Models;
 

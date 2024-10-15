@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
-using Microsoft.Data.SqlClient;
 using TiendaWebAPI.Models;
 
 namespace TiendaWebAPI.Data
@@ -75,7 +75,7 @@ namespace TiendaWebAPI.Data
             var connection = Database.GetDbConnection();
             int rowsAffected = 0;
 
-            await using (var transaction = await Database.BeginTransactionAsync()) 
+            await using (var transaction = await Database.BeginTransactionAsync())
             {
                 try
                 {
@@ -94,14 +94,14 @@ namespace TiendaWebAPI.Data
                             }
                         }
 
-                        rowsAffected = await command.ExecuteNonQueryAsync(); 
+                        rowsAffected = await command.ExecuteNonQueryAsync();
                     }
 
-                    await transaction.CommitAsync(); 
+                    await transaction.CommitAsync();
                 }
                 catch
                 {
-                    await transaction.RollbackAsync(); 
+                    await transaction.RollbackAsync();
                     throw;
                 }
                 finally

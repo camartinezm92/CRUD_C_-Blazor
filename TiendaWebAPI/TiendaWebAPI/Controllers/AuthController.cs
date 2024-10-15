@@ -1,15 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using TiendaWebAPI.Data;
 using TiendaWebAPI.Models;
 using TiendaWebAPI.Services;
-using System.Security.Cryptography;
-using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using TiendaWebAPI.Data;
-using System.Linq;
 
 namespace TiendaWebAPI.Controllers
 {
@@ -47,11 +44,11 @@ namespace TiendaWebAPI.Controllers
             //Console.WriteLine($"Usuario encontrado: {usuario.USU_CUSUARIO}, ID: {usuario.USU_NID}");
 
             // Obtener el hash de la contraseña almacenada
-            string contrasenaAlmacenada = BitConverter.ToString(usuario.USU_BCONTRASENA_HASH).Replace("-", "").ToLower();
+            string contrasenaAlmacenada = BitConverter.ToString(usuario.USU_CPASSWORD).Replace("-", "").ToLower();
             Console.WriteLine($"Hash de la contraseña almacenada: {contrasenaAlmacenada}");
 
             // Imprimir la contraseña ingresada
-           // Console.WriteLine($"Contraseña ingresada: {loginRequest.Contrasena}");
+            // Console.WriteLine($"Contraseña ingresada: {loginRequest.Contrasena}");
 
             // Calcular el hash de la contraseña ingresada utilizando el procedimiento almacenado
             var parameters = new SqlParameter[] { new SqlParameter("@PI_CCONTRASENA", loginRequest.Contrasena) };
@@ -68,7 +65,7 @@ namespace TiendaWebAPI.Controllers
                 var hashIngresado = hashIngresadoList[0]; // Toma el primer elemento
 
                 // Comparar el hash de la contraseña ingresada con el hash almacenado
-                bool contrasenaValida = hashIngresado.SequenceEqual(usuario.USU_BCONTRASENA_HASH);
+                bool contrasenaValida = hashIngresado.SequenceEqual(usuario.USU_CPASSWORD);
 
                 // Mostrar si la contraseña es válida
                 if (contrasenaValida)

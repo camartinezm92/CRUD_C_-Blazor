@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TiendaWebAPI.Models;
+﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
-using Microsoft.Data.SqlClient;
+using TiendaWebAPI.Models;
 
 namespace TiendaWebAPI.Data
 {
@@ -116,14 +116,14 @@ namespace TiendaWebAPI.Data
                             }
                         }
 
-                        rowsAffected = await command.ExecuteNonQueryAsync(); 
+                        rowsAffected = await command.ExecuteNonQueryAsync();
                     }
 
-                    await transaction.CommitAsync(); 
+                    await transaction.CommitAsync();
                 }
                 catch
                 {
-                    await transaction.RollbackAsync(); 
+                    await transaction.RollbackAsync();
                     throw;
                 }
                 finally
