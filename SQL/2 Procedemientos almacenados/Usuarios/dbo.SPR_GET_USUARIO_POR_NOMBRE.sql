@@ -1,26 +1,7 @@
 USE [PRUEBA_USUARIOS]
 GO
 
-/*---------------------------------------------------------------------------------------------
-Autor: Camilo Martinez
-Fecha Creación: 17/09/2024
-Propósito: Obtener información de un usuario basado en su nombre de usuario desencriptado.
-Entradas: 
-    @PI_CUSUARIO NVARCHAR(100) - Nombre de usuario encriptado.
-Salidas:
-    - IdUsuario: ID del usuario encontrado.
-    - NombreIngresado: Nombre de usuario ingresado (sin desencriptar).
-    - NombreUsuario: Nombre desencriptado del usuario.
-    - NombreCompleto: Nombre completo del usuario.
-    - RolId: ID del rol del usuario.
-    - RolNombre: Nombre del rol del usuario.
-    - BContrasenaHash: Hash de la contraseña (no desencriptada).
-Consideraciones: 
-    - Si el usuario no existe, se devuelven valores NULL.
-    - Es necesario que la clave simétrica y el certificado estén creados y disponibles.
-Modificaciones: N/A
------------------------------------------------------------------------------------------------*/
-
+/****** Object:  StoredProcedure [dbo].[SPR_GET_USUARIO_POR_NOMBRE]    Script Date: 15/10/2024 15:00:43 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -31,6 +12,8 @@ CREATE PROCEDURE [dbo].[SPR_GET_USUARIO_POR_NOMBRE]
     @PI_CUSUARIO NVARCHAR(100) -- Parámetro: nombre del usuario
 AS
 BEGIN
+    SET NOCOUNT ON;
+
     -- Abrir la clave simétrica para desencriptar el nombre de usuario
     OPEN SYMMETRIC KEY ClaveEncriptacion DECRYPTION BY CERTIFICATE CertificadoEncriptacion;
 
@@ -38,11 +21,11 @@ BEGIN
     SELECT 
         U.USU_NID AS IdUsuario, 
         @PI_CUSUARIO AS NombreIngresado, 
-        CONVERT(NVARCHAR(100), DECRYPTBYKEY(U.USU_CUSUARIO)) AS NombreUsuario, 
-        U.USU_CNOMBRE_COMPLETO AS NombreCompleto, 
+        CAST(CONVERT(NVARCHAR(100), DECRYPTBYKEY(U.USU_CUSUARIO)) AS VARBINARY(MAX)) AS NombreUsuario, 
+        CAST(U.USU_CNOMBRE_COMPLETO AS VARBINARY(MAX)) AS NombreCompleto, 
         U.USU_NROL_ID AS RolId,
         ROL.ROL_CNOMBRE_ROL AS RolNombre,
-		U.USU_BCONTRASENA_HASH AS BContrasenaHash
+        CAST(U.USU_CPASSWORD AS VARBINARY(MAX)) AS BContrasenaHash
     FROM 
         dbo.TBL_RUSUARIOS U
     JOIN 
@@ -59,10 +42,13 @@ BEGIN
             NULL AS NombreUsuario, 
             NULL AS NombreCompleto, 
             NULL AS RolId,
-            NULL AS RolNombre; -- Todos los campos NULL si no se encuentra
+            NULL AS RolNombre, 
+            NULL AS BContrasenaHash; -- Mantiene el número de columnas
     END
 
     -- Cerrar la clave simétrica por seguridad
     CLOSE SYMMETRIC KEY ClaveEncriptacion;
 END;
 GO
+
+

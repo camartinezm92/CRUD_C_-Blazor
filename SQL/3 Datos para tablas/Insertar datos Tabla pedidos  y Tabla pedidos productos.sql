@@ -1,4 +1,9 @@
--- Reiniciar los valores de ID en las tablas relacionadas
+USE [PRUEBA_PRODUCTOS]
+GO
+
+-- Borra cualqeuir infomacion presente en las tablas de pedidos y reiniciar los valores de ID en las tablas relacionadas
+DELETE FROM TBL_TPEDIDO_PRODUCTOS;
+DELETE FROM TBL_TPEDIDOS;
 DBCC CHECKIDENT ('dbo.TBL_TPEDIDO_PRODUCTOS', RESEED, 0);
 DBCC CHECKIDENT ('dbo.TBL_TPEDIDOS', RESEED, 0);
 
