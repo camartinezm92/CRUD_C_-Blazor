@@ -15,7 +15,7 @@ namespace TiendaWebAPI.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IUsuarioService _usuarioService;
-        private readonly ApplicationDbContext _context; // Agregado
+        private readonly ApplicationDbContext _context;
 
         // Constructor: Inicializa el servicio de usuarios y el contexto de la base de datos
         public AuthController(IUsuarioService usuarioService, ApplicationDbContext context)
@@ -45,7 +45,7 @@ namespace TiendaWebAPI.Controllers
 
             // Obtener el hash de la contraseña almacenada
             string contrasenaAlmacenada = BitConverter.ToString(usuario.USU_CPASSWORD).Replace("-", "").ToLower();
-            Console.WriteLine($"Hash de la contraseña almacenada: {contrasenaAlmacenada}");
+            //Console.WriteLine($"Hash de la contraseña almacenada: {contrasenaAlmacenada}");
 
             // Imprimir la contraseña ingresada
             // Console.WriteLine($"Contraseña ingresada: {loginRequest.Contrasena}");

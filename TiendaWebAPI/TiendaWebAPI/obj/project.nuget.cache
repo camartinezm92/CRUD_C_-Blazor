@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XyBP++IvLjg=",
+  "dgSpecHash": "0YAOc66owtU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\CM\\source\\repos\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj",
+  "projectFilePath": "F:\\Documents\\CRUDC-yBlazor\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\CM\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\CM\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

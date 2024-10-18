@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\CM\\source\\repos\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj": {}
+    "F:\\Documents\\CRUDC-yBlazor\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\CM\\source\\repos\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj": {
+    "F:\\Documents\\CRUDC-yBlazor\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\CM\\source\\repos\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj",
+        "projectUniqueName": "F:\\Documents\\CRUDC-yBlazor\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj",
         "projectName": "TiendaWebAPI",
-        "projectPath": "C:\\Users\\CM\\source\\repos\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj",
+        "projectPath": "F:\\Documents\\CRUDC-yBlazor\\TiendaWebAPI\\TiendaWebAPI\\TiendaWebAPI.csproj",
         "packagesPath": "C:\\Users\\CM\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\CM\\source\\repos\\TiendaWebAPI\\TiendaWebAPI\\obj\\",
+        "outputPath": "F:\\Documents\\CRUDC-yBlazor\\TiendaWebAPI\\TiendaWebAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

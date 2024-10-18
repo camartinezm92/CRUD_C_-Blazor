@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "tsmSYG2OFHA=",
+  "dgSpecHash": "6QlXDqLRMQ0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\CM\\source\\repos\\TeindaDePrueba\\TeindaDePrueba\\TeindaDePrueba.csproj",
+  "projectFilePath": "F:\\Documents\\CRUDC-yBlazor\\TeindaDePrueba\\TeindaDePrueba.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\CM\\.nuget\\packages\\blazored.localstorage\\4.5.0\\blazored.localstorage.4.5.0.nupkg.sha512",
     "C:\\Users\\CM\\.nuget\\packages\\microsoft.aspnetcore.authorization\\6.0.0\\microsoft.aspnetcore.authorization.6.0.0.nupkg.sha512",

@@ -9,7 +9,7 @@ La aplicación es una plataforma de gestión que utiliza **SQL Server** para la 
 
 ## Cómo Instalar y Ejecutar el Proyecto
 
-### video de instalacion y memostracion de funcionamiento : 
+### video de instalacion y demostración de funcionamiento : 
  **https://1drv.ms/v/c/6e09eb5971b6ae2c/EXUiTVEAkalBq33VjFdSOhgBAO35GPujTSyAAKpvJ9lOcA?e=9KAymf**
 
 ### 0. Clonar el Repositorio
